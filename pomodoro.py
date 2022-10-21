@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from msvcrt import kbhit, getch
 from time import sleep
 from typing import List
 from winsound import MessageBeep, MB_OK
@@ -38,11 +39,16 @@ def parse_timedelta(delta: timedelta) -> List[int]:
 
 
 def end_countdown() -> None:
-    print("-------------------------")
+    flush_input_buffer()
     play_beep()
     for _ in range(2):
         sleep(2)
         play_beep()
+
+
+def flush_input_buffer():
+    while kbhit():
+        getch()
 
 
 def play_beep() -> None:
@@ -50,7 +56,7 @@ def play_beep() -> None:
 
 
 def acknowledge(period_type: str, minutes: int) -> None:
-    input(f"Time for a {minutes} minutes {period_type}! Press ENTER to acknowledge...")
+    input(f"Time for a {minutes}-minute {period_type}! Press ENTER to acknowledge...")
 
 
 if __name__ == "__main__":

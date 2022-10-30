@@ -8,15 +8,15 @@ from winsound import MessageBeep, MB_OK
 def main() -> None:
     focus_periods = [25, 25, 25, 25]
     break_periods = [5, 5, 5, 15]
-    counter = 0
+    idx = 0
     while True:
-        next_break_time = get_future_time(focus_periods[counter])
+        next_break_time = get_future_time(focus_periods[idx])
         countdown_to("break", next_break_time)
-        acknowledge("break", break_periods[counter])
-        next_focus_time = get_future_time(break_periods[counter])
+        acknowledge("break", break_periods[idx])
+        next_focus_time = get_future_time(break_periods[idx])
         countdown_to("focus", next_focus_time)
-        counter = (counter + 1) % len(focus_periods)
-        acknowledge("focus", focus_periods[counter])
+        idx = (idx + 1) % len(focus_periods)
+        acknowledge("focus", focus_periods[idx])
 
 
 def get_future_time(minutes: int) -> datetime:
@@ -28,7 +28,7 @@ def countdown_to(countdown_type: str, next_time: datetime) -> None:
         time_until = next_time - datetime.now()
         [minutes, seconds] = parse_timedelta(time_until)
         print(f"{minutes:02d}:{seconds:02d} until next {countdown_type}...", end="\r")
-        sleep(0.5)
+        sleep(0.25)
     end_countdown()
 
 
@@ -39,19 +39,19 @@ def parse_timedelta(delta: timedelta) -> List[int]:
 
 
 def end_countdown() -> None:
-    flush_input_buffer()
-    play_beep()
+    windows_flush_input_buffer()
+    windows_play_beep()
     for _ in range(2):
         sleep(2)
-        play_beep()
+        windows_play_beep()
 
 
-def flush_input_buffer():
+def windows_flush_input_buffer() -> None:
     while kbhit():
         getch()
 
 
-def play_beep() -> None:
+def windows_play_beep() -> None:
     MessageBeep(MB_OK)
 
 
